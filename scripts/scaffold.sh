@@ -40,16 +40,19 @@ log "Kit 路径:  $KIT_ROOT"
 log "Target:    $TARGET"
 
 # --- step 1: 拷贝 kit → target（排除元数据/脚本/示例） -----------
+# 注意：rs ync 模式需以 / 开头才能锁定到源根目录，
+# 否则会递归匠每个子目录同名文件（会误杀骨架 README.md）。
 log "[1/4] 拷贝 kit 内容 → target"
 EXCLUDES=(
   --exclude='.git'
-  --exclude='scripts'
-  --exclude='VERSION'
-  --exclude='README.md'
-  --exclude='CHANGELOG.md'
-  --exclude='LICENSE'
+  --exclude='/scripts'
+  --exclude='/VERSION'
+  --exclude='/README.md'
+  --exclude='/CHANGELOG.md'
+  --exclude='/LICENSE'
+  --exclude='/.gitignore'
 )
-[[ "$WITH_EXAMPLES" == "true" ]] || EXCLUDES+=(--exclude='_example')
+[[ "$WITH_EXAMPLES" == "true" ]] || EXCLUDES+=(--exclude='/_example')
 
 if [[ "$DRY_RUN" == "true" ]]; then
   log "DRY: rsync -a ${EXCLUDES[*]} $KIT_ROOT/ $TARGET/"
