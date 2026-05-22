@@ -33,19 +33,81 @@ Either path produces a clean skeleton. By default, reference samples under any `
 
 `scripts/new-service.sh --type <stack> --name <svc> --bctx <bounded-context>` adds a new service (the `--bctx` value MUST already be registered in `docs/architecture/_context-map.yaml`, otherwise the script aborts).
 
+## Install
+
+### Prerequisites
+
+- `git` ≥ 2.30
+- `bash` ≥ 3.2 (macOS stock works; Linux/WSL fine)
+- `make` (optional, for aggregated targets)
+
+### 1 · Get the kit
+
+```bash
+git clone https://github.com/fivis/agentic-mesh-arch-kit.git ~/.agentic-mesh-arch-kit
+```
+
+> Pin a version (recommended for reproducibility):
+> ```bash
+> git -C ~/.agentic-mesh-arch-kit checkout v0.1.0
+> ```
+
+### 2 · Scaffold a new platform
+
+```bash
+mkdir my-platform && cd my-platform
+bash ~/.agentic-mesh-arch-kit/scripts/scaffold.sh --name my-platform
+```
+
+Flags:
+
+| Flag | Effect |
+|---|---|
+| `--name <project-name>` | **required** — substitutes `<project-name>` placeholders |
+| `--with-examples` | keep `_example/` reference samples (default: delete after render) |
+| `--dry-run` | show what would happen; write nothing |
+
+After `scaffold.sh` you get a clean skeleton + a fresh `git init` + first commit + `.arch-kit-version` pin.
+
+### 3 · Add your first service
+
+```bash
+# bctx MUST already exist in docs/architecture/_context-map.yaml
+bash ~/.agentic-mesh-arch-kit/scripts/new-service.sh \
+  --type api \
+  --name orders \
+  --bctx bctx-orders \
+  --preset node-ts-postgres
+```
+
+`--type` ∈ `api | worker | saga`
+`--preset` ∈ `node-ts-postgres | python-fastapi-postgres | go-grpc-postgres | kotlin-spring-postgres`
+
+Service is named `svc-<NN>-<bctx>-<type>` (auto-numbered).
+
+### 4 · (Optional) Layer in AI collaboration
+
+```bash
+git clone https://github.com/fivis/agentic-mesh-ai-kit.git ~/.agentic-mesh-ai-kit
+bash ~/.agentic-mesh-ai-kit/scripts/install.sh --vendor all
+```
+
+See [`agentic-mesh-ai-kit`](https://github.com/fivis/agentic-mesh-ai-kit) README for vendor-specific flags.
+
+### 5 · Upgrade later
+
+```bash
+git -C ~/.agentic-mesh-arch-kit fetch --tags
+git -C ~/.agentic-mesh-arch-kit checkout v0.2.0
+bash ~/.agentic-mesh-arch-kit/scripts/upgrade-arch-kit.sh
+# review git diff; resolve any *.local backups or merge conflict markers
+```
+
+The upgrade script reads `.arch-kit-version`, fetches that tag as the merge base, and performs a three-way merge against your modified files.
+
 ## Relationship with `agentic-mesh-ai-kit`
 
 **Zero coupling.** This repo never invokes `ai-kit`, is never a submodule of it, and contains no AI-tooling files. If you want AI collaboration on top, separately run `ai-kit/scripts/install.sh` in the derived platform — it lays AI assets alongside this skeleton without touching its contents.
-
-## Versioning
-
-Derived platforms record the kit version used in a single file at the platform root:
-
-```
-.arch-kit-version   # e.g. v0.1.0
-```
-
-`scripts/upgrade-arch-kit.sh` performs a three-way merge against a newer tag and updates this file.
 
 ## Status
 
