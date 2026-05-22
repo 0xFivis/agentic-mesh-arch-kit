@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 # agentic-mesh-arch-kit / scripts/new-service.sh
-# 用法：bash scripts/new-service.sh --type <api|worker|saga> --name <short-name> --bctx <bctx-id> [--preset <preset>]
-# 校验：bctx 必须存在于 docs/architecture/_context-map.yaml；服务命名 svc-<NN>-<bctx>-<role>
+# 用法：cd <消费仓> && bash <arch-kit>/scripts/new-service.sh \
+#         --type <api|worker|saga> --name <short-name> --bctx <bctx-id> \
+#         [--preset <preset>] [--target <dir>]
+# 校验：bctx 必须存在于 <target>/docs/architecture/_context-map.yaml；服务命名 svc-<NN>-<bctx>-<role>
 
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+KIT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+TARGET="${TARGET:-$PWD}"
 TYPE=""
 NAME=""
 BCTX=""
@@ -19,6 +22,7 @@ while [[ $# -gt 0 ]]; do
     --name)   NAME="$2"; shift 2 ;;
     --bctx)   BCTX="$2"; shift 2 ;;
     --preset) PRESET="$2"; shift 2 ;;
+    --target) TARGET="$2"; shift 2 ;;
     -h|--help) grep '^#' "$0" | head -8; exit 0 ;;
     *) err "未知参数: $1"; exit 2 ;;
   esac
@@ -27,7 +31,13 @@ done
 [[ -n "$TYPE" && -n "$NAME" && -n "$BCTX" ]] || { err "--type --name --bctx 必填"; exit 2; }
 [[ "$TYPE" =~ ^(api|worker|saga)$ ]] || { err "--type 必须是 api|worker|saga"; exit 2; }
 
-cd "$ROOT"
+mkdir -p "$TARGET" && TARGET="$(cd "$TARGET" && pwd)"
+if [[ "$TARGET" == "$KIT_ROOT" ]]; then
+  err "拒绝在 arch-kit 自身建服务：TARGET ($TARGET) 与 KIT_ROOT 相同。请 cd 到消费仓后再跑，或加 --target <消费仓>。"
+  exit 3
+fi
+cd "$TARGET"
+log "Target: $TARGET"
 
 # --- 校验 bctx 是否存在于 context-map ---------------------------
 CTXMAP="docs/architecture/_context-map.yaml"
@@ -47,10 +57,13 @@ DEST="apps/$SERVICE"
 
 log "创建 $DEST  (preset=$PRESET)"
 mkdir -p "$DEST"
-# 从 _template 复制基线
-cp -R apps/_template/* "$DEST/" 2>/dev/null || true
+# 从 _template 复制基线（优先用 target 本地骨架，缺则回退到 KIT_ROOT）
+TPL_DIR="apps/_template"
+[[ -d "$TPL_DIR" ]] || TPL_DIR="$KIT_ROOT/apps/_template"
+cp -R "$TPL_DIR"/* "$DEST/" 2>/dev/null || true
 # 从 preset 注入（README 占位）
 PRESET_DIR="apps/_stack-presets/$PRESET"
+[[ -d "$PRESET_DIR" ]] || PRESET_DIR="$KIT_ROOT/apps/_stack-presets/$PRESET"
 [[ -d "$PRESET_DIR" ]] || { err "未知 preset: $PRESET"; exit 2; }
 cp "$PRESET_DIR/README.md" "$DEST/PRESET.md"
 
