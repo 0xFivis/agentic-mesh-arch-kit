@@ -1,0 +1,36 @@
+<!-- REFERENCE ONLY: sanitized sample, not for production -->
+# 08 · 技术选型与 ADR 索引
+
+## 1. 选型原则
+
+1. 团队熟悉 > 业界流行
+2. 可观测 > 性能极致
+3. 标准协议 > 厂商绑定
+4. 任何选型 → ADR 留痕（见 `docs/adr/`）
+
+## 2. 关键栈
+
+| 维度 | 选型 | 替代品 | ADR |
+|------|------|--------|-----|
+| 语言（后端） | <lang> | <alt> | ADR-NNN |
+| Web 框架 | <framework> | <alt> | ADR-NNN |
+| 数据库 | <db> | <alt> | ADR-NNN |
+| 消息 | <broker> | <alt> | ADR-NNN |
+| 容器编排 | <k8s | nomad | ecs> | — | ADR-NNN |
+| 可观测 | <OTEL stack> | — | ADR-NNN |
+
+## 3. ADR 索引
+
+> 详细列表见 `docs/adr/README.md`
+
+| ADR | 主题 | 状态 |
+|-----|------|------|
+| ADR-001 | <decision-title> | accepted |
+| ADR-002 | <decision-title> | superseded by ADR-NNN |
+
+## 4. 选型再评估周期
+
+- 关键栈每 12 个月复盘一次
+- 出现重大事故 / EOL / 安全漏洞 → 立即重审
+
+> 全章结束。后续修改请通过 ADR + 本章 update + `_registry.yaml` 同步。

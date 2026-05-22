@@ -1,0 +1,46 @@
+# REFERENCE ONLY: sanitized sample, not for production
+# agentic-mesh-arch-kit/docs/architecture/_registry.yaml.tmpl
+# 平台资产单一注册表：服务、契约、事件、SLO、数据保留 · 机器可读
+# 用途：scripts/new-service.sh 写入；CI 用作 source of truth 校验
+
+version: 1
+project: <project-name>
+
+services:
+  - name: svc-01-<bctx-a>-api
+    bctx: <bctx-a>
+    role: api
+    owner: <team>
+    repo: <git-url-or-path>
+    runtime: <lang>
+    slo:
+      availability: 99.9
+      latency_p95_ms: 200
+    contracts:
+      provides:
+        - contracts/<bctx-a>/openapi/svc-01.yaml
+      consumes:
+        - contracts/<bctx-b>/asyncapi/<event>.v1.yaml
+
+  - name: svc-02-<bctx-a>-worker
+    bctx: <bctx-a>
+    role: worker
+    owner: <team>
+
+events:
+  - id: <bctx-a>.<aggregate>.created.v1
+    publisher: svc-01-<bctx-a>-api
+    schema: contracts/<bctx-a>/asyncapi/<bctx-a>.<aggregate>.created.v1.yaml
+    subscribers:
+      - svc-NN-<bctx-b>-worker
+
+data_retention:
+  - category: <user-pii>
+    duration_days: <NN>
+    deletion: gdpr-erasure
+  - category: <audit-log>
+    duration_days: 2555    # ~7y
+
+adrs_active:
+  - ADR-001
+  - ADR-002

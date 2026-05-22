@@ -1,0 +1,39 @@
+# REFERENCE ONLY: sanitized sample, not for production
+# agentic-mesh-arch-kit/docs/architecture/_context-map.yaml.tmpl
+# Context Map（DDD）· 所有 BC 间关系的机器可读单一来源
+# 修改本文件前请先 ADR；scripts/new-service.sh 会校验 BC 是否存在于此
+
+version: 1
+project: <project-name>
+
+bounded_contexts:
+  - id: <bctx-a>
+    subdomain: <subdomain-a>
+    type: core            # core | supporting | generic
+    owner: <team-or-person>
+    aggregates:
+      - <AggregateA>
+    invariants:
+      - <inv-id>: <inv-description>
+
+  - id: <bctx-b>
+    subdomain: <subdomain-a>
+    type: core
+    owner: <team-or-person>
+
+relationships:
+  # 关系类型见 DDD: Partnership / Customer-Supplier / Conformist /
+  # Anti-Corruption Layer / Open-Host Service / Published Language / Shared Kernel
+  - upstream: <bctx-a>
+    downstream: <bctx-b>
+    type: customer-supplier
+    integration: published-language
+    transport: async-event       # sync-api | async-event
+    contract_ref: contracts/<bctx-a>/asyncapi/<bctx-a>.<aggregate>.created.v1.yaml
+
+  - upstream: <bctx-b>
+    downstream: <external-system-1>
+    type: anti-corruption-layer
+    integration: acl
+    transport: sync-api
+    contract_ref: packages/acl-<external-system-1>/openapi.yaml

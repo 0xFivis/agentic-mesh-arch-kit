@@ -1,0 +1,22 @@
+# REFERENCE ONLY: sanitized sample, not for production
+# Makefile — 根级 target（聚合所有服务）
+
+.PHONY: help bootstrap test lint build clean
+
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}; {printf "%-20s %s\n", $$1, $$2}'
+
+bootstrap: ## 初始化所有依赖
+	@echo "TODO: per-stack bootstrap"
+
+test: ## 跑所有服务的 unit + integration test
+	@find apps -mindepth 1 -maxdepth 1 -type d -exec $(MAKE) -C {} test \;
+
+lint: ## lint 所有服务
+	@find apps -mindepth 1 -maxdepth 1 -type d -exec $(MAKE) -C {} lint \;
+
+build: ## 构建所有服务镜像
+	@find apps -mindepth 1 -maxdepth 1 -type d -exec $(MAKE) -C {} build \;
+
+clean: ## 清理本地工件
+	@git clean -Xdn

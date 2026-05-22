@@ -1,0 +1,37 @@
+<!-- REFERENCE ONLY: sanitized sample, not for production -->
+# 04 · 数据架构与账本设计
+
+## 1. 数据分层
+
+| 层 | 主要存储 | 用途 |
+|----|---------|------|
+| OLTP | <db-engine> | 业务交易 |
+| OLAP / Lake | <data-warehouse> | 分析 |
+| Cache | <cache> | 热点 |
+| Search | <search-engine> | 全文 |
+| 对象 | <object-store> | 文件 |
+
+## 2. 数据归属
+
+- 每个 BC 拥有自己的 schema：`<bctx>_<env>`
+- 跨 BC 数据通过 **Public Event** 派发（见 `contracts/<bctx>/asyncapi`）
+- 共享只读视图：通过 CDC → 数据湖 → 派发宽表
+
+## 3. 关键不变量
+
+- INV-数据-1：写入必须经服务（无 DBA 直写）
+- INV-数据-2：所有金额/时间字段遵循 `tech-standards/STD-03-data/`
+
+## 4. 账本/双账（若适用）
+
+- 选型：<选型>（双账 / 单账 + 审计日志 / 事件溯源）
+- 对账频率：<frequency>
+- 异常处理：见 `docs/services/<bctx-account>/06_runbooks.md`
+
+## 5. 数据保留与合规
+
+| 数据类别 | 保留期 | 删除策略 |
+|---------|--------|---------|
+| <category-a> | <duration> | soft-delete / GDPR 擦除 |
+
+> **下一步** → `05_multi-tenant-and-compliance.md`

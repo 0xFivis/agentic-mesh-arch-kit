@@ -1,0 +1,32 @@
+<!-- REFERENCE ONLY: sanitized sample, not for production -->
+# 03 · 微服务拆分原则与服务清单
+
+## 1. 拆分原则（不可妥协）
+
+1. **一服务一 BC**：禁止跨 BC 的"超级服务"
+2. **数据私有**：每个服务独占其数据库 schema
+3. **契约先行**：API/Event 在 `contracts/<bctx>/` 提案 → ADR → 实现
+4. **可独立部署**：无共享构建依赖
+5. **可观测自洽**：每个服务自带 logs/metrics/traces
+
+## 2. 服务命名规则
+
+`svc-<NN>-<bctx>-<role>` 例 `svc-01-<bctx-a>-api`、`svc-02-<bctx-a>-worker`
+
+## 3. 服务清单
+
+| Service | BC | Role | 同步入口 | 异步主题 | Owner |
+|---------|----|------|---------|---------|-------|
+| svc-01-<bctx-a>-api | <bctx-a> | api | `POST /<resource>` | — | <owner> |
+| svc-02-<bctx-a>-worker | <bctx-a> | worker | — | `<bctx-a>.<event>` | <owner> |
+
+> 完整服务详设见 `docs/services/svc-<NN>-<bctx>-<role>/`，模板 8 章见 `docs/services/AGENTS.md`。
+
+## 4. 拆分反模式（红线）
+
+- ❌ "通用服务" / "工具服务"
+- ❌ 共享数据库 / 共享 ORM model
+- ❌ 同步调用 > 2 跳
+- ❌ 循环依赖
+
+> **下一步** → `04_data-architecture.md`

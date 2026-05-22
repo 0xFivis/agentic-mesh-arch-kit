@@ -1,0 +1,51 @@
+<!-- REFERENCE ONLY: sanitized sample, not for production -->
+# 02 · 系统全景架构
+
+> **目的**：用 C4 Context + Container 层级展示 <project-name> 的整体架构、外部依赖、关键边界。
+
+## 1. System Context（C4 L1）
+
+```mermaid
+flowchart LR
+  User([<user-persona>])
+  Admin([<admin-persona>])
+  Sys[[<project-name>]]
+  Ext1[(<external-system-1>)]
+  Ext2[(<external-system-2>)]
+  User --> Sys
+  Admin --> Sys
+  Sys --> Ext1
+  Sys --> Ext2
+```
+
+## 2. Container 视图（C4 L2）
+
+| Container | 类型 | 职责 | 主要技术 |
+|-----------|------|------|---------|
+| <web-app> | SPA | 用户前端 | <framework> |
+| <mobile-app> | Mobile | 移动端 | <framework> |
+| <api-gateway> | Service | 入口/鉴权/限流 | <tech> |
+| <bctx-a>-svc | Service | <bctx-a> 业务 | <tech> |
+| <db-cluster> | Datastore | 持久化 | <db-engine> |
+| <message-bus> | Infra | 异步消息 | <broker> |
+
+## 3. 部署拓扑
+
+| 环境 | 区域 | 高可用 | 灾备 RTO/RPO |
+|------|------|--------|-------------|
+| prod | <region-1> | 多 AZ | RTO=<x>min RPO=<y>min |
+| staging | <region-1> | 单 AZ | — |
+
+## 4. 跨 BC 通信原则
+
+- 同步：HTTP / gRPC，仅 Public API（见 `contracts/<bctx>/openapi`）
+- 异步：Event-Carried State Transfer（见 `contracts/<bctx>/asyncapi`）
+- 严禁：直读他 BC 数据库
+
+## 5. 非功能性约束
+
+- 可用性：<99.9%>
+- 延迟（P95）：<API <200ms / 异步 <5s>
+- 数据保留：<see _registry.yaml#data-retention>
+
+> **下一步** → `03_microservices-split-principles-and-service-list.md`

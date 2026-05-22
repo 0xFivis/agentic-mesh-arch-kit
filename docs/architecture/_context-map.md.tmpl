@@ -1,0 +1,32 @@
+<!-- REFERENCE ONLY: sanitized sample, not for production -->
+# Context Map（人类可读视图）
+
+> `_context-map.yaml` 的可视化镜像。每次 yaml 改动同步更新此文件。
+
+```mermaid
+flowchart LR
+  subgraph Core[Core Domain]
+    A[<bctx-a>]
+    B[<bctx-b>]
+  end
+  subgraph Generic[Generic]
+    G[<bctx-generic>]
+  end
+  E[(<external-system-1>)]
+
+  A -->|U/D · async event| B
+  B -->|ACL · sync| E
+  A -.->|Shared Kernel| G
+```
+
+## 关系图例
+
+- **U/D**：Upstream → Downstream
+- **ACL**：防腐层（双向都允许，但 schema 隔离）
+- **Shared Kernel**：仅 core 子域内允许
+
+## 不变量速查
+
+| INV | 边界 | 描述 |
+|-----|------|------|
+| INV-1 | <bctx-a> | <description> |

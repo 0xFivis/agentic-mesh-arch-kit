@@ -1,0 +1,35 @@
+# REFERENCE ONLY: sanitized sample, not for production
+# .github/workflows/security.yml
+name: security
+
+on:
+  pull_request:
+  schedule:
+    - cron: '0 3 * * *'   # 每日 03:00 UTC
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+      - name: SAST (Semgrep)
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/owasp-top-ten
+      - name: Dependency review
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@v4
+
+  ai-security-review:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      # 同 ci.yml ai-review，但 prompt-file 指向安全专用 prompt（若有）
+      - name: Placeholder
+        run: echo "AI security review — prompt-file: .github/ci-prompts/review.md (或 overrides/security.md)"

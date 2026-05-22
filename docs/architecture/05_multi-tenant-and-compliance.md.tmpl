@@ -1,0 +1,26 @@
+<!-- REFERENCE ONLY: sanitized sample, not for production -->
+# 05 · 多主体与合规架构
+
+## 1. 多主体模型
+
+- 主体类型：<organization|tenant|jurisdiction>
+- 隔离粒度：<row-level | schema-level | cluster-level>
+- 路由：基于 `<tenant-id-header>` 在 gateway 层注入
+
+## 2. 合规分类
+
+| 法规/标准 | 适用主体 | 影响 BC | 关键控制点 |
+|----------|---------|---------|----------|
+| <regulation-1> | <jurisdiction-1> | <bctx-a>, <bctx-b> | <control> |
+
+## 3. 数据驻留
+
+- 用户数据存储位置由 `<jurisdiction>` 决定
+- 跨境传输策略：<encrypt + DPA + 当地节点>
+
+## 4. 审计要求
+
+- 全量写操作 audit log（schema 见 STD-05-security）
+- 保留期：<duration>
+
+> **下一步** → `06_integration-and-external-boundaries.md`

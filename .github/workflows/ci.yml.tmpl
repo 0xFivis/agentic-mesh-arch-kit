@@ -1,0 +1,43 @@
+# REFERENCE ONLY: sanitized sample, not for production
+# .github/workflows/ci.yml
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Detect changed services
+        id: changed
+        run: |
+          echo "services=$(git diff --name-only origin/main...HEAD | grep '^apps/' | awk -F/ '{print $2}' | sort -u | paste -sd, -)" >> "$GITHUB_OUTPUT"
+      - name: Lint (root)
+        run: make lint || true
+      - name: Test (root)
+        run: make test || true
+      - name: Contract verify
+        run: |
+          if [[ -d testing/contract ]]; then
+            echo "TODO: 触发 Pact provider verification 仅针对 ${{ steps.changed.outputs.services }}"
+          fi
+
+  ai-review:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      # 占位：任选 1 个 vendor action（Claude Code Action / Codex Action / Copilot Coding Agent / Cursor CLI）
+      # 所有 vendor 均通过 prompt-file 引用 SSOT：.github/ci-prompts/review.md
+      # - uses: anthropics/claude-code-action@v1
+      #   with:
+      #     prompt-file: .github/ci-prompts/review.md
+      #     anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: Placeholder
+        run: echo "AI review step — choose your vendor; prompt-file: .github/ci-prompts/review.md"

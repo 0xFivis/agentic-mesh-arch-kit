@@ -1,0 +1,27 @@
+<!-- REFERENCE ONLY: sanitized sample, not for production -->
+# 06 · 集成与外部系统边界
+
+## 1. 外部依赖清单
+
+| 外部系统 | 类型 | 调用方向 | 协议 | 容错策略 |
+|---------|------|---------|------|---------|
+| <external-system-1> | SaaS | out | HTTPS/REST | retry + circuit breaker |
+| <external-system-2> | Bank/Partner | bi-directional | <protocol> | idempotency key + reconciliation |
+
+## 2. 防腐层（ACL）
+
+- 每个外部依赖必须经 ACL：`packages/acl-<external-system>/`
+- ACL 不允许跨 BC 复用：每个 BC 自建自己的 mapping
+
+## 3. SLA / SLO 期望
+
+| 外部 | 对方 SLA | 我方降级 | 监测 |
+|------|---------|---------|------|
+| <ext-1> | 99.9% | 队列 + delayed retry | synthetic ping |
+
+## 4. 凭证与密钥
+
+- 所有外部凭证存 `<secret-manager>`，不入仓
+- 轮换策略见 STD-05-security
+
+> **下一步** → `07_cross-context-collaboration.md`

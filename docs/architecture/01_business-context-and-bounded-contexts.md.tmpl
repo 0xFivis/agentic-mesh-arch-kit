@@ -1,0 +1,43 @@
+<!-- REFERENCE ONLY: sanitized sample, not for production -->
+# 01 · 业务上下文与限界上下文
+
+> **目的**：定义 <project-name> 的业务范围、核心域 vs 支撑域，以及限界上下文（Bounded Context, BC）的初始切分。
+>
+> **读者**：架构师、技术 Lead、产品负责人。
+>
+> **更新规则**：每次新增/合并/拆分 BC 必须同步更新本章 + `_context-map.md` + `_registry.yaml`。
+
+## 1. 业务范围（In-Scope / Out-of-Scope）
+
+| 范畴 | 说明 |
+|------|------|
+| In-Scope | <主营业务边界> |
+| Out-of-Scope | <明确不做的业务> |
+
+## 2. 子域分类
+
+| 子域 | 类型 | 战略价值 | 备注 |
+|------|------|---------|------|
+| <subdomain-a> | Core | 高 | <为什么是核心> |
+| <subdomain-b> | Supporting | 中 | <为什么是支撑> |
+| <subdomain-c> | Generic | 低 | 优先采购/SaaS |
+
+## 3. 限界上下文清单（初始切分）
+
+| BC | 所属子域 | 关键聚合根 | 语言 | 负责人 |
+|----|---------|----------|------|--------|
+| <bctx-a> | <subdomain-a> | <AggregateA> | <ubiquitous-language-A> | <owner> |
+| <bctx-b> | <subdomain-a> | <AggregateB> | <ubiquitous-language-B> | <owner> |
+
+## 4. 不变量（Invariants）
+
+- INV-1: <边界内不可破坏的业务规则>
+- INV-2: <跨 BC 必须强一致还是最终一致？>
+
+## 5. 词汇表（Ubiquitous Language）
+
+| 术语 | BC | 定义 | 同义词陷阱 |
+|------|----|------|----------|
+| <term-1> | <bctx-a> | <定义> | 在 <bctx-b> 中称 <other-term> |
+
+> **下一步**：完成本章后 → `02_系统全景架构.md` 描述 BC 间的部署/数据流。

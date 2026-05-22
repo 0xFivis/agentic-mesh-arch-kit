@@ -1,0 +1,27 @@
+<!-- REFERENCE ONLY: sanitized sample, not for production -->
+# 07 · 跨上下文协作模式
+
+## 1. 集成模式选型矩阵
+
+| 场景 | 模式 | 工具 | 一致性 |
+|------|------|------|--------|
+| 读他 BC 数据 | Customer-Supplier + Public API | OpenAPI sync | 最终（缓存） |
+| 状态变更广播 | Event-Carried State Transfer | AsyncAPI / <broker> | 最终 |
+| 跨 BC 业务流 | Saga | Orchestrator service | 最终 + 补偿 |
+| 实时同步（罕见） | 共享内核（Shared Kernel） | 仅同子域内 | 强 |
+
+## 2. Public Event 命名
+
+`<bctx>.<aggregate>.<verb>.<v-major>`，例：`<bctx-a>.<aggregate>.created.v1`
+
+## 3. Schema 演进
+
+- 仅向后兼容（additive only）
+- breaking → 新 major（v1 / v2 并行 ≥ 3 个月）
+
+## 4. Saga 落地约束
+
+- 每个 Saga 必须可视化（见 `docs/services/<bctx-saga>/03_sagas.md`）
+- 必须可重放、可手动补偿
+
+> **下一步** → `08_tech-selection-and-adr-index.md`
