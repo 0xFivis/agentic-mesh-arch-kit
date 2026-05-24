@@ -42,7 +42,7 @@ log "Target:    $TARGET"
 # --- step 1: 拷贝 kit → target（排除元数据/脚本/示例） -----------
 # 注意：rs ync 模式需以 / 开头才能锁定到源根目录，
 # 否则会递归匠每个子目录同名文件（会误杀骨架 README.md）。
-log "[1/4] 拷贝 kit 内容 → target"
+log "[1/5] 拷贝 kit 内容 → target"
 EXCLUDES=(
   --exclude='.git'
   --exclude='/scripts'
@@ -61,7 +61,8 @@ else
 fi
 
 # --- step 2: 渲染所有 .tmpl → 同名无后缀文件 -------------------
-log "[2/4] 渲染 .tmpl"
+# 例外：docs/services/_template/ 是 new-service.sh 的模板弹药库，必须保留 .md.tmpl 原样。
+log "[2/5] 渲染 .tmpl"
 RENDERED=0
 SKIPPED=0
 if [[ "$DRY_RUN" != "true" ]]; then
@@ -71,16 +72,26 @@ if [[ "$DRY_RUN" != "true" ]]; then
     sed -e "s/<project-name>/${PROJECT_NAME}/g" "$src" > "$dst"
     rm -f "$src"
     RENDERED=$((RENDERED+1))
-  done < <(find "$TARGET" -type f -name '*.tmpl' -not -path '*/.git/*' -print0)
+  done < <(find "$TARGET" -type f -name '*.tmpl' -not -path '*/.git/*' -not -path '*/docs/services/_template/*' -print0)
 fi
 log "渲染完成: $RENDERED 渲染 / $SKIPPED 跳过"
 
 # --- step 3: 写入 .arch-kit-version ---------------------------
-log "[3/4] 写 .arch-kit-version"
+log "[3/5] 写 .arch-kit-version"
 [[ "$DRY_RUN" == "true" ]] || echo "$KIT_VERSION" > "$TARGET/.arch-kit-version"
 
-# --- step 4: git init (若未初始化) ----------------------------
-log "[4/4] git init"
+# --- step 4: 投递 new-service.sh 到 target，便于后续在新仓内直接调用 ---
+log "[4/5] 投递 new-service.sh → .arch-kit/"
+if [[ "$DRY_RUN" == "true" ]]; then
+  log "DRY: cp $KIT_ROOT/scripts/new-service.sh $TARGET/.arch-kit/new-service.sh"
+else
+  mkdir -p "$TARGET/.arch-kit"
+  cp "$KIT_ROOT/scripts/new-service.sh" "$TARGET/.arch-kit/new-service.sh"
+  chmod +x "$TARGET/.arch-kit/new-service.sh"
+fi
+
+# --- step 5: git init (若未初始化) ----------------------------
+log "[5/5] git init"
 if [[ -d "$TARGET/.git" ]]; then
   warn "已是 git 仓库，跳过 init"
 else
@@ -93,5 +104,6 @@ fi
 
 log "完成。下一步："
 log "  1) 填写 docs/architecture/*.md 中的 <占位>"
-log "  2) bash $KIT_ROOT/scripts/new-service.sh --type api --name <svc> --bctx <bctx> --preset node-ts-postgres"
-log "  3) 用 agentic-mesh-ai-kit install.sh 注入 AI 协作矩阵"
+log "  2) bash .arch-kit/new-service.sh --type api --name <svc> --bctx <bctx> --preset node-ts-postgres"
+log "  3) 用 agentic-mesh-ai-kit 注入 AI 协作矩阵："
+log "       bash <(curl -sSL https://raw.githubusercontent.com/0xFivis/agentic-mesh-ai-kit/main/bootstrap.sh) --vendor all"
