@@ -1,0 +1,31 @@
+<!-- REFERENCE ONLY: sanitized template, fill before use -->
+<!-- ROLE: SSOT | source-of-truth for <svc> saga choreography & compensation -->
+# `<svc>` · Saga
+
+> 仅当本服务参与**跨服务长流程**时填写；否则删除此文件或保留并写 "N/A"。
+
+## Saga 名称
+
+`<saga-name>`
+
+## 参与服务
+
+| 步骤 | 服务 | 动作 | 补偿动作 |
+|---|---|---|---|
+| 1 | `<svc-A>` | <do X> | <undo X> |
+| 2 | `<svc-B>` | <do Y> | <undo Y> |
+
+## 协调模式
+
+- Choreography（事件驱动） / Orchestration（中央编排器）
+
+## 超时与重试
+
+- 单步超时：<X>s
+- 全局超时：<Y>min
+- 重试策略：指数退避 + jitter
+
+## 失败处理
+
+- 部分失败：触发补偿链
+- 不可逆步骤：标记 + 人工介入

@@ -1,1 +1,4 @@
 .arch-kit-version
+
+__pycache__/
+*.pyc

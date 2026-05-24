@@ -1,0 +1,32 @@
+<!-- REFERENCE ONLY: sanitized template, fill before use -->
+<!-- ROLE: SSOT | source-of-truth for <svc> core state machine & transitions -->
+# `<svc>` · State Machine
+
+> 仅当本服务核心实体有**显式状态机**时填写。
+
+## 实体
+
+`<Entity>`
+
+## 状态
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft
+    Draft --> Submitted: submit
+    Submitted --> Approved: approve
+    Submitted --> Rejected: reject
+    Approved --> [*]
+    Rejected --> [*]
+```
+
+## 转移规则
+
+| From | Event | To | 守卫条件 | 副作用 |
+|---|---|---|---|---|
+| Draft | submit | Submitted | 所有必填字段非空 | publish `<...>.submitted.v1` |
+| Submitted | approve | Approved | 调用方有 approver 角色 | publish `<...>.approved.v1` |
+
+## 终态
+
+- `Approved` / `Rejected`：终态，不可再转

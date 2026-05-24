@@ -1,0 +1,26 @@
+{
+  "_comment": "REFERENCE ONLY: sanitized Pact contract template, fill before use",
+  "consumer": { "name": "<consumer-svc>" },
+  "provider": { "name": "<provider-svc>" },
+  "interactions": [
+    {
+      "description": "a request to get <resource>",
+      "providerState": "<resource> with id 42 exists",
+      "request": {
+        "method": "GET",
+        "path": "/<resource>/42"
+      },
+      "response": {
+        "status": 200,
+        "headers": { "Content-Type": "application/json" },
+        "body": {
+          "id": "42",
+          "_comment": "match against contracts/<bctx>/openapi/<provider>/v1/api.yaml"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": { "version": "3.0.0" }
+  }
+}

@@ -1,0 +1,30 @@
+<!-- REFERENCE ONLY: sanitized template, fill before use -->
+<!-- ROLE: VIEW | derived from contracts/<bounded-context>/openapi/<svc>/, narrative only, no schema duplication -->
+# `<svc>` · API
+
+> 详细 schema 见 `contracts/<bounded-context>/openapi/<svc>/v1/api.yaml`，本文只写"为何这么设计"。
+
+## 设计原则
+
+- 资源命名复数
+- 版本走 URL `v1` 段（破坏性变更必须 `v2`）
+- 错误响应统一 `contracts/_common/openapi/error.yaml#/components/schemas/Error`
+- 分页统一 cursor based（见 `contracts/_common/openapi/pagination.yaml`）
+
+## Endpoint 清单
+
+| Method | Path | OperationId | 说明 |
+|---|---|---|---|
+| GET | `/<resource>` | list<Resource> | 列表 |
+
+## 认证
+
+<JWT bearer / mTLS / 内部白名单>
+
+## 限流
+
+<RPS 上限 + 维度（per-tenant / per-IP）>
+
+## Idempotency
+
+<是否要求 Idempotency-Key 头；TTL；存储位置>

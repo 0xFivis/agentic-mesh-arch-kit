@@ -1,0 +1,47 @@
+<!-- REFERENCE ONLY: sanitized template, fill before use -->
+<!-- ROLE: VIEW | derived from contracts/<bounded-context>/ + docs/services/_registry.yaml, narrative only, no schema duplication -->
+---
+bctx: <bounded-context>
+owner: <team-or-person>
+lifecycle: alpha
+---
+
+# `<svc>` — <one-line-positioning>
+
+## 定位
+
+<服务存在的唯一理由，一句话>
+
+## 入口
+
+- HTTP: `https://api.example.com/<bounded-context>/<svc>/v1`
+- Repo: `apps/<svc>/`
+- 契约: `contracts/<bounded-context>/openapi/<svc>/v1/api.yaml`
+
+## 联系人
+
+- Tech Lead: <name>
+- On-call: <oncall-rotation>
+- Slack: `#<bounded-context>-<svc>`
+
+## 文件矩阵索引（3 强制 + 4 按需 + 1 自动）
+
+**强制**：
+
+- [Runbook](runbook.md) · 部署 / 监控 / 故障处置
+- [Non-functional](non-functional.md) · SLO / 容量 / 安全（VIEW，引 STD-05/06/07）
+
+**按需**（由 `new-service.sh --type` 自动决定）：
+
+- [API](api.md) · 对外 HTTP / gRPC 接口（VIEW，引 `contracts/<bctx>/openapi/<svc>/`）
+- [Events](events.md) · 产出与消费事件（VIEW，引 `contracts/<bctx>/asyncapi/`）
+- [Saga](saga.md) · 跨服务长流程
+- [State Machine](state-machine.md) · 核心状态机
+
+**自动**：
+
+- `_data-index.md` · 数据资产索引（AUTO，由 `scripts/build-data-index.py` 扫 `apps/<svc>/migrations/` 生成，禁手改）
+
+> 数据模型不在本目录维护：DDL 入 `apps/<svc>/migrations/*.sql`（L3 SSOT），`_data-index.md` 是其只读视图。
+> 未决问题用 Issue tracker 记录，不在文档内维护。
+> 治理细则见 [`docs/architecture/00_governance.md §5`](../../architecture/00_governance.md)。

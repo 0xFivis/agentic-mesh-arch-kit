@@ -1,0 +1,36 @@
+<!-- REFERENCE ONLY: sanitized template, fill before use -->
+# Runbook: `<scenario-or-alert-name>`
+
+> 一个 runbook 对应一个告警或一个明确故障场景。Alert 通过 `runbook_url` annotation 链接到此文件。
+
+## 适用范围
+
+- 服务: `<svc>`
+- 告警: `<alert-name>`
+- 严重度: P0 / P1 / P2
+
+## 现象（Symptom）
+
+<用户 / 监控看到什么>
+
+## 诊断（Diagnose）
+
+1. <第一步排查命令 / dashboard>
+2. <第二步>
+
+## 缓解（Mitigate）
+
+> 优先**止血**，再**根治**。
+
+1. <立即操作 1>
+2. <立即操作 2>
+
+## 根因排查（Root Cause）
+
+- <如何收集 evidence>
+- <典型根因清单>
+
+## 复盘
+
+- 事件后 24h 内开 5-why
+- 输出 → `docs/postmortem/<date>-<incident>.md`

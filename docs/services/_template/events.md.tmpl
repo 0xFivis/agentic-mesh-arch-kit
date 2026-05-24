@@ -1,0 +1,23 @@
+<!-- REFERENCE ONLY: sanitized template, fill before use -->
+<!-- ROLE: VIEW | derived from contracts/<bounded-context>/asyncapi/, narrative only, no schema duplication -->
+# `<svc>` · Events
+
+> Schema 见 `contracts/<bounded-context>/asyncapi/v1/events.yaml`。本文记录"产出 / 消费 + 业务语义"。
+
+## 产出（Publish）
+
+| 事件类型 | 触发时机 | 至少一次 / 恰一次 | 幂等键 |
+|---|---|---|---|
+| `<bounded-context>.<entity>.<action>.v1` | <何时> | at-least-once | `id` |
+
+## 消费（Subscribe）
+
+| 事件类型 | 来源 bctx | 处理动作 | 失败策略 |
+|---|---|---|---|
+| `<upstream-bctx>.<x>.<y>.v1` | `<upstream-bctx>` | <做什么> | DLQ after 5 retries |
+
+## Outbox 模式
+
+- 是否启用：<是 / 否>
+- 表：`<svc>.outbox_events`
+- Relay：<内置 worker / Debezium>

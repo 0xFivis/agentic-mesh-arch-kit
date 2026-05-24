@@ -1,0 +1,35 @@
+name: contracts-sync
+
+# W16 · 检测 services ↔ apps ↔ events 三方一致性
+# 范围：(D) _registry.services[*].name 与 apps/svc-*/ 目录 parity
+#       (E) events[*].publisher / subscribers 必须是已注册 service；schema 路径存在
+# 实现：scripts/check-contracts-sync.py（消费仓未安装则 warn-only 跳过）
+
+on:
+  pull_request:
+    paths:
+      - 'apps/**'
+      - 'docs/services/_registry.yaml'
+      - 'scripts/check-contracts-sync.py'
+      - '.github/workflows/contracts-sync.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  sync-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PyYAML
+        run: pip install pyyaml
+      - name: Contracts sync check
+        run: |
+          if [ ! -f scripts/check-contracts-sync.py ]; then
+            echo "::warning::scripts/check-contracts-sync.py 未安装到本仓库，跳过"
+            exit 0
+          fi
+          python3 scripts/check-contracts-sync.py --repo-root .

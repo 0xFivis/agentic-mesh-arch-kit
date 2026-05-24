@@ -1,0 +1,31 @@
+<!-- REFERENCE ONLY: sanitized template, fill before use -->
+# SLO: `<svc>`
+
+## 用户旅程（CUJ）
+
+<本 SLO 守护的用户关键旅程，一句话>
+
+## SLI 定义
+
+| SLI | 定义 | 测量方式 |
+|---|---|---|
+| Availability | `(总请求 - 5xx) / 总请求` | Prometheus: `http_requests_total{status!~"5.."}` |
+| Latency | `p99 < 200ms` 的请求占比 | Histogram: `http_request_duration_seconds` |
+
+## SLO 目标
+
+| SLO | 目标 | 窗口 | Error Budget |
+|---|---|---|---|
+| Availability | 99.9% | 30d rolling | 43min / 30d |
+| Latency (p99) | 99% of req < 200ms | 7d rolling | — |
+
+## Error Budget 政策
+
+- Budget 消耗 > 50% → 冻结 feature flag 上线
+- Budget 消耗 > 90% → 全员投入可靠性工作
+- Budget 耗尽 → P0 事件 + 复盘
+
+## 报告
+
+- 周报：`<dashboard-link>`
+- 月度评审：服务 owner + SRE 共同 review

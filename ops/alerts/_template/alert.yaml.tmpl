@@ -1,0 +1,21 @@
+# REFERENCE ONLY: sanitized template, fill before use
+# Prometheus / Alertmanager 兼容格式
+groups:
+  - name: <svc>-alerts
+    rules:
+      - alert: <ServiceName><Condition>
+        expr: |
+          # PromQL 表达式，例：
+          # rate(http_requests_total{service="<svc>",status=~"5.."}[5m])
+          #   / rate(http_requests_total{service="<svc>"}[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: page  # page | ticket | info
+          service: <svc>
+          bctx: <bounded-context>
+        annotations:
+          summary: '<svc>: <one-line-summary>'
+          description: |
+            <详细描述：发生了什么 / 影响范围>
+          runbook_url: 'https://github.com/<org>/<repo>/blob/main/ops/runbooks/<svc>-<alert>.md'
+          dashboard_url: '<grafana-link>'

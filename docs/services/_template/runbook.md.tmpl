@@ -1,0 +1,40 @@
+<!-- REFERENCE ONLY: sanitized template, fill before use -->
+<!-- ROLE: SSOT | source-of-truth for <svc> deployment/oncall/incident-response -->
+# `<svc>` · Runbook
+
+## 部署
+
+- Pipeline: `.github/workflows/<svc>-deploy.yml`
+- 环境：dev → staging → prod（手动 approve）
+- 灰度策略：<canary 1% → 10% → 100%>
+- 回滚：`kubectl rollout undo deployment/<svc>` 或 `<其他>`
+
+## 监控
+
+- Dashboard: <Grafana URL>
+- Key Metrics:
+  - 请求量 (RPS)
+  - p50 / p95 / p99 延迟
+  - 5xx 错误率
+  - 队列堆积（如适用）
+- Alerts: `ops/alerts/<svc>-*.yaml`
+
+## 常见故障
+
+### 5xx 飙升
+
+1. 看 dashboard → 定位异常 endpoint
+2. 看 trace（Tempo / Jaeger）→ 定位下游
+3. 如下游故障 → 启动熔断 / 切流
+4. 如本服务 bug → 回滚到上一版本
+
+### 数据库连接耗尽
+
+1. 看连接池监控
+2. 临时扩容
+3. 排查慢 SQL（pg_stat_activity）
+
+## On-call 交接
+
+- 周例会更新 known issues
+- Memory: `<wiki link>`

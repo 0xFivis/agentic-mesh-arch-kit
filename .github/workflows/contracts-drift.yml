@@ -1,0 +1,35 @@
+name: contracts-drift
+
+# W15 · 检测代码与契约漂移
+# 范围：(A) _registry.yaml.services[*].contracts.provides|consumes 路径存在性
+#       (B) contracts/<bctx>/{openapi,asyncapi}/**/*.yaml 合法 + 含必要顶层字段
+# 实现：scripts/check-contracts-drift.py（消费仓未安装则 warn-only 跳过）
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/**'
+      - 'docs/services/_registry.yaml'
+      - 'scripts/check-contracts-drift.py'
+      - '.github/workflows/contracts-drift.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  drift-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PyYAML
+        run: pip install pyyaml
+      - name: Contracts drift check
+        run: |
+          if [ ! -f scripts/check-contracts-drift.py ]; then
+            echo "::warning::scripts/check-contracts-drift.py 未安装到本仓库，跳过"
+            exit 0
+          fi
+          python3 scripts/check-contracts-drift.py --repo-root .

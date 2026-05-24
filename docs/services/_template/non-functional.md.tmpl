@@ -1,0 +1,34 @@
+<!-- REFERENCE ONLY: sanitized template, fill before use -->
+<!-- ROLE: VIEW | derived from tech-standards/STD-06-observability.md + STD-07-testing.md + STD-05-security.md, narrative only -->
+# `<svc>` · Non-Functional
+
+## SLO
+
+| 指标 | 目标 | 测量窗口 |
+|---|---|---|
+| Availability | 99.9% | 30d rolling |
+| p99 latency | < 200ms | 7d rolling |
+| Error rate | < 0.1% | 1h rolling |
+
+Error budget: `1 - 99.9% = 0.1% = ~43min/30d`
+
+## 容量
+
+- 峰值 RPS：<X>
+- 数据库 QPS：<Y>
+- 存储增长：<Z> GB/月
+- 横向扩容触发：CPU > 70% 持续 5min
+
+## 安全
+
+- 认证：<JWT / mTLS>
+- 授权：RBAC + <ABAC?>
+- 敏感数据：见 [STD-05 §敏感数据分级](../../../tech-standards/STD-05-security.md) + [STD-03 §7 数据分级](../../../tech-standards/STD-03-data.md)
+- 密钥管理：Vault / KMS
+- 审计日志：所有写操作
+
+## 合规
+
+- 适用监管：<GDPR / SOC2 / 无>
+- 数据驻留：<region>
+- 留存策略：<x 年>

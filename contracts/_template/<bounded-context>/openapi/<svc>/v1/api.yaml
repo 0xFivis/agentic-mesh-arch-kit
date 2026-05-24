@@ -1,0 +1,45 @@
+# REFERENCE ONLY: sanitized template, fill before use
+openapi: 3.0.3
+info:
+  title: <svc> API
+  version: 1.0.0
+  description: |
+    `<svc>` 服务对外 HTTP 契约。所属 bounded context: `<bounded-context>`。
+servers:
+  - url: https://api.example.com/<bounded-context>/<svc>/v1
+paths:
+  /<resource>:
+    get:
+      operationId: list<Resource>
+      parameters:
+        - $ref: '../../../../_common/openapi/pagination.yaml#/components/parameters/PageSize'
+        - $ref: '../../../../_common/openapi/pagination.yaml#/components/parameters/PageToken'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, page]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/<Resource>'
+                  page:
+                    $ref: '../../../../_common/openapi/pagination.yaml#/components/schemas/PageMeta'
+        '400':
+          $ref: '../../../../_common/openapi/error.yaml#/components/responses/BadRequest'
+        '500':
+          $ref: '../../../../_common/openapi/error.yaml#/components/responses/InternalError'
+components:
+  schemas:
+    <Resource>:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+          format: uuid
+        # TODO: 填充业务字段

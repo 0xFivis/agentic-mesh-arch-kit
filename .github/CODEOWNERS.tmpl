@@ -1,0 +1,24 @@
+# REFERENCE ONLY: sanitized template, fill before use
+# CODEOWNERS 规则：按 bounded context 分团队，跨 bctx 修改需多团队 review。
+# 顺序由下向上覆盖（最后匹配生效）。
+
+# 默认 owner（兜底）
+*       @<org>/platform-team
+
+# 平台横切
+/.github/                       @<org>/platform-team
+/tech-standards/                @<org>/platform-team
+/scripts/                       @<org>/platform-team
+/ops/                           @<org>/sre-team
+
+# 按 bounded context 锁权（D28：bctx = 团队边界）
+/contracts/<bctx-a>/            @<org>/team-a
+/apps/<svc-of-bctx-a>/          @<org>/team-a
+/docs/services/<svc-of-bctx-a>/ @<org>/team-a
+
+# 跨 bctx 共享白名单：所有团队 review
+/contracts/_common/             @<org>/platform-team @<org>/architects
+
+# 架构与 ADR
+/docs/architecture/             @<org>/architects
+/docs/adr/                      @<org>/architects

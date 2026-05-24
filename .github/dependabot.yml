@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  # 服务 / 包级生态由 new-service.sh / new-package.sh 追加
+  # 示例：
+  # - package-ecosystem: "gomod"
+  #   directory: "/apps/svc-01-orders-api"
+  #   schedule: { interval: "weekly" }

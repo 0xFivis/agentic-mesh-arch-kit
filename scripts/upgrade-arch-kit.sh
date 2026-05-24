@@ -42,8 +42,8 @@ else
 fi
 cp -R "$KIT_ROOT/." "$NEW/"
 
-# 候选合并范围：docs/architecture/* + docs/standards/* + Makefile + .tool-versions
-declare -a SCAN_DIRS=("docs/architecture" "docs/standards")
+# 候选合并范围：docs/architecture/* + tech-standards/* + Makefile + .tool-versions
+declare -a SCAN_DIRS=("docs/architecture" "tech-standards")
 
 merge_file() {
   local rel="$1"

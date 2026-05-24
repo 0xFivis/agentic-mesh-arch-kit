@@ -1,0 +1,16 @@
+// contracts/_common/proto/v1/money.proto
+// 跨 bctx 货币类型 · 整数最小单位 + ISO 4217 币种 · 生产可直引
+syntax = "proto3";
+
+package common.v1;
+
+option go_package = "common/v1;commonv1";
+
+// Money 表示一笔金额。
+// - `amount_minor`：以币种最小单位为整数（如 USD 用美分；JPY 用日元；BTC 用 satoshi）
+// - `currency`：ISO 4217 三字母代码（USD/EUR/JPY/...）；加密货币用约定大写代码（BTC/ETH）
+// 红线：禁止用 float/double 表达货币
+message Money {
+  int64 amount_minor = 1;
+  string currency = 2;
+}

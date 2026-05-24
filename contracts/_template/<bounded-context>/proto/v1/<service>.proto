@@ -1,0 +1,35 @@
+// REFERENCE ONLY: sanitized template, fill before use
+syntax = "proto3";
+
+package <bounded_context>.v1;
+
+option go_package = "<bounded_context>/v1;<bounded_context>v1";
+
+import "common/v1/timestamp.proto";
+import "common/v1/money.proto";
+
+// <Service>Service 服务定义（gRPC 服务级契约）
+service <Service>Service {
+  rpc Get<Resource>(Get<Resource>Request) returns (<Resource>);
+  rpc List<Resource>(List<Resource>Request) returns (List<Resource>Response);
+}
+
+message <Resource> {
+  string id = 1;
+  common.v1.Timestamp created_at = 2;
+  // TODO: 填充业务字段
+}
+
+message Get<Resource>Request {
+  string id = 1;
+}
+
+message List<Resource>Request {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+message List<Resource>Response {
+  repeated <Resource> items = 1;
+  string next_page_token = 2;
+}

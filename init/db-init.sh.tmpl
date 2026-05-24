@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# REFERENCE ONLY: sanitized template, fill before use
+# 创建初始数据库、用户、扩展。在 compose / k8s init job 中调用。
+set -euo pipefail
+
+: "${DB_HOST:?DB_HOST not set}"
+: "${DB_PORT:=5432}"
+: "${DB_SUPERUSER:=postgres}"
+: "${APP_DB_NAME:?APP_DB_NAME not set}"
+: "${APP_DB_USER:?APP_DB_USER not set}"
+: "${APP_DB_PASSWORD:?APP_DB_PASSWORD not set}"
+
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" <<SQL
+CREATE USER ${APP_DB_USER} WITH PASSWORD '${APP_DB_PASSWORD}';
+CREATE DATABASE ${APP_DB_NAME} OWNER ${APP_DB_USER};
+\\connect ${APP_DB_NAME}
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+SQL
+
+echo "DB initialized: ${APP_DB_NAME}"

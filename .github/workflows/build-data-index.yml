@@ -1,0 +1,32 @@
+name: build-data-index
+
+on:
+  pull_request:
+    paths:
+      - 'apps/*/migrations/**'
+      - 'scripts/build-data-index.py'
+      - '.github/workflows/build-data-index.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  drift-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Drift check
+        run: |
+          if [ ! -f scripts/build-data-index.py ]; then
+            echo "::warning::scripts/build-data-index.py 未安装到本仓库，跳过"
+            exit 0
+          fi
+          python3 scripts/build-data-index.py --check
+      - name: How to fix
+        if: failure()
+        run: |
+          echo "::error::docs/services/<svc>/_data-index.md 与 apps/<svc>/migrations/*.sql 不一致。"
+          echo "本地运行: python3 scripts/build-data-index.py 然后提交。"

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# REFERENCE ONLY: sanitized template, fill before use
+# 灌入开发/测试 fixture 数据。生产环境禁止运行。
+set -euo pipefail
+
+if [[ "${APP_ENV:-}" == "production" ]]; then
+  echo "ERROR: seed.sh must not run in production" >&2
+  exit 1
+fi
+
+: "${DB_URL:?DB_URL not set}"
+
+echo "Seeding fixtures from testing/fixtures/ to $DB_URL ..."
+# TODO: 调用具体 seed 工具（sqlx / atlas / 自写 SQL）
+# 示例：
+# psql "$DB_URL" < testing/fixtures/seed.sql
+
+echo "Seed complete."

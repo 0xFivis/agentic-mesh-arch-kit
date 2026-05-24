@@ -1,0 +1,17 @@
+// contracts/_common/proto/v1/timestamp.proto
+// 跨 bctx 时间戳约定 · 强制 UTC 纳秒精度 · 生产可直引
+syntax = "proto3";
+
+package common.v1;
+
+option go_package = "common/v1;commonv1";
+
+// Timestamp 包装 Google 标准 Timestamp，附加业务语义约束。
+// - 必须 UTC（zone offset = 0）
+// - 精度纳秒
+// - 序列化为 RFC3339Nano（JSON 边界）
+import "google/protobuf/timestamp.proto";
+
+message Timestamp {
+  google.protobuf.Timestamp value = 1;
+}

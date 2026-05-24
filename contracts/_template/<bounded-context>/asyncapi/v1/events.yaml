@@ -1,0 +1,40 @@
+# REFERENCE ONLY: sanitized template, fill before use
+asyncapi: 3.0.0
+info:
+  title: <bounded-context> Domain Events
+  version: 1.0.0
+  description: |
+    `<bounded-context>` 上下文的领域事件（bctx 粒度，非服务粒度）。
+    所有事件必须套 CloudEvents 信封（见 _common/asyncapi/envelope.yaml）。
+channels:
+  <bounded-context>.events:
+    address: '<bounded-context>.events'
+    messages:
+      <Entity>Created:
+        $ref: '#/components/messages/<Entity>Created'
+operations:
+  publish<Entity>Created:
+    action: send
+    channel:
+      $ref: '#/channels/<bounded-context>.events'
+    messages:
+      - $ref: '#/components/messages/<Entity>Created'
+components:
+  messages:
+    <Entity>Created:
+      name: <Entity>Created
+      title: <Entity> created event
+      contentType: application/cloudevents+json
+      payload:
+        allOf:
+          - $ref: '../../../_common/asyncapi/envelope.yaml#/components/schemas/CloudEvent'
+          - type: object
+            properties:
+              type:
+                const: '<bounded-context>.<entity>.created.v1'
+              data:
+                type: object
+                required: [id]
+                properties:
+                  id: { type: string, format: uuid }
+                  # TODO: 填充业务字段
