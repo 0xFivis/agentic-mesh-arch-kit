@@ -46,7 +46,9 @@ case "$TYPE" in
 esac
 
 mkdir -p "$TARGET" && TARGET="$(cd "$TARGET" && pwd)"
-if [[ "$TARGET" == "$KIT_ROOT" ]]; then
+# 守卫：仅当 KIT_ROOT 是真正的 kit 仓（含 scripts/scaffold.sh）时，才禁止 TARGET==KIT_ROOT。
+# 投递到消费仓的 .arch-kit/new-service.sh 不含 scaffold.sh，跳过此守卫。
+if [[ -f "$KIT_ROOT/scripts/scaffold.sh" && "$TARGET" == "$KIT_ROOT" ]]; then
   err "拒绝在 arch-kit 自身建服务：TARGET ($TARGET) 与 KIT_ROOT 相同。请 cd 到消费仓后再跑，或加 --target <消费仓>。"
   exit 3
 fi

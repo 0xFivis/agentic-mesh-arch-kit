@@ -1,5 +1,11 @@
 # agentic-mesh-arch-kit
 
+> **⚠ 状态：早期草案 / Early Draft · Not production-ready**
+>
+> 本仓仍在完善与测试中，**不是正式发布的项目**：内容存在缺失、模板与 CI 覆盖不全、边角场景未验证、技术债较多。仅适合**评估、试用、提反馈**，**不建议直接用于生产**。API / 脚本参数 / 目录结构可能随时变动且不保证向后兼容。
+>
+> *This repository is an early draft and not officially released. Expect missing content, incomplete CI/template coverage, unverified edge cases, and notable tech debt. Use for evaluation and feedback only; not recommended for production. APIs, script flags, and layout may change without notice.*
+
 > **Project skeleton template** for polyglot, multi-service software platforms — zero AI-collaboration content, zero business domain content. Pair it with [`agentic-mesh-ai-kit`](https://github.com/fivis/agentic-mesh-ai-kit) (independent, optional) for AI-assisted development workflows.
 
 ## What this repo is
@@ -34,6 +40,20 @@ Either path produces a clean skeleton. By default, reference samples under any `
 `scripts/new-service.sh --type <stack> --name <svc> --bctx <bounded-context>` adds a new service (the `--bctx` value MUST already be registered in `docs/architecture/_context-map.yaml`, otherwise the script aborts).
 
 ## Install
+
+### Quick start — remote one-liner (no clone)
+
+```bash
+mkdir my-platform && cd my-platform
+bash <(curl -sSL https://raw.githubusercontent.com/0xFivis/agentic-mesh-arch-kit/main/bootstrap.sh) --name my-platform
+```
+
+The bootstrap script shallow-clones the kit to a tempdir, runs `scripts/scaffold.sh` against your current directory, and cleans up. All `scaffold.sh` flags pass through (`--with-examples`, `--dry-run`, …).
+
+Pin a version: `KIT_REF=v0.2.0 bash <(curl -sSL …/bootstrap.sh) --name my-platform`
+Use a fork: `KIT_REPO=https://github.com/you/agentic-mesh-arch-kit.git bash <(curl -sSL …/bootstrap.sh) --name my-platform`
+
+For `new-service.sh` / `upgrade-arch-kit.sh` you still need the kit on disk — see "Get the kit" below.
 
 ### Prerequisites
 
