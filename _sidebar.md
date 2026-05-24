@@ -1,6 +1,7 @@
 <!-- _sidebar.md -->
 
 * **入口**
+  * [🚀 公开介绍页 Overview ↗](https://0xfivis.github.io/agentic-mesh-ai-kit/overview.html)
   * [概览 / Overview](README.md)
   * [Changelog](CHANGELOG.md)
   * [技术债清单](docs/TECH-DEBT.md)
